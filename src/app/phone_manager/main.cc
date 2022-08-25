@@ -384,7 +384,8 @@ struct Sculpt::Main : Input_event_handler,
 	 * Network section
 	 */
 
-	Network_section_dialog _network_section_dialog  { _section_dialogs };
+	Network_section_dialog _network_section_dialog  {
+		_section_dialogs, _network._nic_target, _network._nic_state };
 
 	/*
 	 * Software section
@@ -435,13 +436,12 @@ struct Sculpt::Main : Input_event_handler,
 
 			_network_section_dialog.generate(xml);
 
-			if (_network_section_dialog.selected()) {
-				gen_named_node(xml, "float", "net settings", [&] {
-					xml.attribute("east", "yes");
-					xml.attribute("west", "yes");
+			gen_named_node(xml, "float", "net settings", [&] {
+				xml.attribute("east", "yes");
+				xml.attribute("west", "yes");
+				if (_network_section_dialog.selected())
 					_network.dialog.generate(xml);
-				});
-			}
+			});
 
 			_software_section_dialog.generate(xml);
 
